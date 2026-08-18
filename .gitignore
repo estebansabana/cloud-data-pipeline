@@ -16,3 +16,6 @@ output/
 
 # macOS
 .DS_Store
+
+# Prefect
+.prefect/
