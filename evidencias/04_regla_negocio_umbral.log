@@ -1,0 +1,35 @@
+19:08:31.398 | INFO    | prefect - Starting temporary server on http://127.0.0.1:8874
+See https://docs.prefect.io/v3/concepts/server#how-to-guides for more information on running a dedicated Prefect server.
+19:08:32.985 | INFO    | Flow run 'foamy-caterpillar' - Beginning flow run 'foamy-caterpillar' for flow 'Prueba - regla de negocio de calidad'
+19:08:32.987 | INFO    | Flow run 'foamy-caterpillar' - Umbral configurado: 20% de invalidez maxima
+19:08:32.991 | INFO    | Flow run 'foamy-caterpillar' - === CASO A: 5 de 50 invalidos (10%) - se espera ACEPTACION ===
+19:08:32.997 | INFO    | Task run 'Validacion de calidad-02f' - Registros iniciales: 50
+19:08:32.997 | INFO    | Task run 'Validacion de calidad-02f' - Descartados por coordenadas nulas: 2
+19:08:32.997 | INFO    | Task run 'Validacion de calidad-02f' - Descartados por distancia invalida: 3
+19:08:32.997 | INFO    | Task run 'Validacion de calidad-02f' - Registros validos: 45 (tasa de invalidez: 10.00%)
+19:08:32.998 | INFO    | Task run 'Validacion de calidad-02f' - Finished in state Completed()
+19:08:32.998 | INFO    | Flow run 'foamy-caterpillar' - CASO A APROBADO: dataset aceptado con 45 registros validos.
+19:08:32.998 | INFO    | Flow run 'foamy-caterpillar' - === CASO B: 20 de 50 invalidos (40%) - se espera RECHAZO ===
+19:08:33.000 | INFO    | Task run 'Validacion de calidad-9c9' - Registros iniciales: 50
+19:08:33.000 | INFO    | Task run 'Validacion de calidad-9c9' - Descartados por coordenadas nulas: 10
+19:08:33.000 | INFO    | Task run 'Validacion de calidad-9c9' - Descartados por distancia invalida: 10
+19:08:33.001 | INFO    | Task run 'Validacion de calidad-9c9' - Registros validos: 30 (tasa de invalidez: 40.00%)
+19:08:33.001 | ERROR   | Task run 'Validacion de calidad-9c9' - Task run failed with exception: DataQualityError('Tasa de invalidez 40.00% supera el umbral de 20%. Se aborta la carga a S3.')
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1021, in run_context
+    yield self
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1683, in run_task_sync
+    engine.call_task_fn(txn)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1038, in call_task_fn
+    result = call_with_parameters(self.task.fn, parameters)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/utilities/callables/__init__.py", line 348, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/Users/estebanbejaranocaldas/Documents/maestria_analitica/cloud-data-pipeline/pipeline_orchestrator.py", line 103, in validate_quality
+    raise DataQualityError(
+pipeline_orchestrator.DataQualityError: Tasa de invalidez 40.00% supera el umbral de 20%. Se aborta la carga a S3.
+19:08:33.005 | ERROR   | Task run 'Validacion de calidad-9c9' - Finished in state Failed('Task run encountered an exception DataQualityError: Tasa de invalidez 40.00% supera el umbral de 20%. Se aborta la carga a S3.')
+19:08:33.005 | ERROR   | Flow run 'foamy-caterpillar' - CALIDAD DE DATOS: Tasa de invalidez 40.00% supera el umbral de 20%. Se aborta la carga a S3.
+19:08:33.005 | INFO    | Flow run 'foamy-caterpillar' - CASO B APROBADO: la carga a S3 fue abortada por la regla de negocio.
+19:08:33.006 | INFO    | Flow run 'foamy-caterpillar' - Prueba de frontera superada: el umbral discrimina correctamente.
+19:08:33.992 | INFO    | Flow run 'foamy-caterpillar' - Finished in state Completed()
+19:08:34.014 | INFO    | prefect - Stopping temporary server on http://127.0.0.1:8874
