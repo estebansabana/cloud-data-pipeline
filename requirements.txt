@@ -6,3 +6,4 @@ boto3
 pyarrow
 duckdb
 prefect
+matplotlib
