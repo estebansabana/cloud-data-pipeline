@@ -15,6 +15,7 @@ import pandas as pd
 import boto3
 import duckdb
 from botocore.exceptions import ClientError
+from boto3.exceptions import S3UploadFailedError
 from dotenv import load_dotenv
 from prefect import flow, task, get_run_logger
 
@@ -146,8 +147,9 @@ def upload_to_s3(local_path: str, s3_key: str) -> None:
     try:
         s3.upload_file(local_path, BUCKET, s3_key)
         logger.info(f"Cargado a s3://{BUCKET}/{s3_key}")
-    except ClientError as e:
-        # Se registra el detalle y se relanza: fallar visible, nunca en silencio
+    except (ClientError, S3UploadFailedError) as e:
+        # upload_file envuelve el ClientError en S3UploadFailedError, que NO
+        # hereda de ClientError: por eso deben capturarse ambos tipos.
         logger.error(f"Fallo de credenciales o permisos en S3: {e}")
         raise
 
@@ -281,7 +283,7 @@ def verify_zones() -> None:
 
 
 @flow(name="Pipeline Medallion HCN", log_prints=True)
-def main_flow() -> None:
+def main_flow() -> int:
     """
     Orquestador principal. Encadena las etapas del pipeline y aplica
     degradacion controlada: ante cualquier fallo se registra un mensaje
@@ -291,7 +293,7 @@ def main_flow() -> None:
 
     if not BUCKET:
         logger.error("S3_BUCKET_NAME no definido en .env")
-        sys.exit(1)
+        return 1
 
     try:
         # --- Zona Raw ---
@@ -314,19 +316,22 @@ def main_flow() -> None:
         verify_zones()
 
         logger.info("Pipeline completado correctamente.")
+        return 0
 
     except DataQualityError as e:
         # No es un fallo tecnico: el pipeline funciono y rechazo datos malos
         logger.error(f"CALIDAD DE DATOS: {e}")
-        sys.exit(2)
-    except (ClientError, FileNotFoundError,
+        return 2
+    except (ClientError, S3UploadFailedError, FileNotFoundError,
             requests.exceptions.RequestException) as e:
         logger.error(f"FALLO OPERATIVO: {type(e).__name__}: {e}")
-        sys.exit(1)
+        return 1
     except Exception as e:
         logger.error(f"FALLO NO PREVISTO: {type(e).__name__}: {e}")
-        sys.exit(1)
+        return 1
 
 
+# El codigo de salida se traduce fuera del flujo: main_flow decide QUE paso
+# (estado Failed en Prefect) y el punto de entrada lo traduce a exit code.
 if __name__ == "__main__":
-    main_flow()
+    sys.exit(main_flow())

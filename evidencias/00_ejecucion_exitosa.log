@@ -1,0 +1,52 @@
+19:05:38.064 | INFO    | prefect - Starting temporary server on http://127.0.0.1:8627
+See https://docs.prefect.io/v3/concepts/server#how-to-guides for more information on running a dedicated Prefect server.
+19:05:39.645 | INFO    | Flow run 'inquisitive-leech' - Beginning flow run 'inquisitive-leech' for flow 'Pipeline Medallion HCN'
+19:05:40.471 | INFO    | Task run 'Extraccion Foursquare-128' - Extraccion completada: 50 registros obtenidos.
+19:05:40.476 | INFO    | Task run 'Extraccion Foursquare-128' - Finished in state Completed()
+19:05:40.485 | INFO    | Task run 'Persistencia CSV local-b8e' - CSV local generado: output/restaurants_raw.csv (19010 bytes)
+19:05:40.486 | INFO    | Task run 'Persistencia CSV local-b8e' - Finished in state Completed()
+19:05:41.133 | INFO    | Task run 'Carga a S3-0e2' - Cargado a s3://esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv
+19:05:41.138 | INFO    | Task run 'Carga a S3-0e2' - Finished in state Completed()
+19:05:41.144 | INFO    | Task run 'Validacion de calidad-aee' - Registros iniciales: 50
+19:05:41.145 | INFO    | Task run 'Validacion de calidad-aee' - Descartados por coordenadas nulas: 0
+19:05:41.145 | INFO    | Task run 'Validacion de calidad-aee' - Descartados por distancia invalida: 0
+19:05:41.146 | INFO    | Task run 'Validacion de calidad-aee' - Registros validos: 50 (tasa de invalidez: 0.00%)
+19:05:41.148 | INFO    | Task run 'Validacion de calidad-aee' - Finished in state Completed()
+19:05:41.182 | INFO    | Task run 'Capa Optimized - Parquet-f66' - Parquet generado: output/restaurants_processed.parquet (11245 bytes)
+19:05:41.182 | INFO    | Task run 'Capa Optimized - Parquet-f66' - Reduccion frente al CSV: 40.8%
+19:05:41.183 | INFO    | Task run 'Capa Optimized - Parquet-f66' - Finished in state Completed()
+19:05:41.657 | INFO    | Task run 'Carga a S3-8af' - Cargado a s3://esteban-datalake-hcn-2026/optimized_zone/restaurants_processed.parquet
+19:05:41.658 | INFO    | Task run 'Carga a S3-8af' - Finished in state Completed()
+19:05:41.688 | INFO    | Task run 'Capa Consumption - KPIs por categoria-20e' - Establecimientos unicos: 50
+19:05:41.689 | INFO    | Task run 'Capa Consumption - KPIs por categoria-20e' - Asignaciones categoria-establecimiento: 68
+19:05:41.689 | INFO    | Task run 'Capa Consumption - KPIs por categoria-20e' - Categorias distintas: 34
+19:05:41.699 | INFO    | Task run 'Capa Consumption - KPIs por categoria-20e' - KPIs generados: output/category_kpis.parquet (5291 bytes)
+19:05:41.699 | INFO    | Task run 'Capa Consumption - KPIs por categoria-20e' - 
+--- Tabla de KPIs por categoria (top 10) ---
+19:05:41.701 | INFO    | Task run 'Capa Consumption - KPIs por categoria-20e' -                  category  total_places  unique_places  avg_distance_m  min_distance_m  max_distance_m
+               Restaurant            10             10          548.60             321            1163
+                BBQ Joint             8              8          781.75             363            1352
+             Burger Joint             5              5         1056.20             292            1519
+                 Pizzeria             4              4          312.50             166             473
+     Colombian Restaurant             4              4          509.50             246            1163
+       Italian Restaurant             3              3          674.33             430            1095
+            Hot Dog Joint             2              2          551.50             229             874
+Latin American Restaurant             2              2          798.00             441            1155
+               Steakhouse             2              2          840.50             441            1240
+         Arepa Restaurant             2              2          975.50             769            1182
+19:05:41.702 | INFO    | Task run 'Capa Consumption - KPIs por categoria-20e' - Finished in state Completed()
+19:05:42.148 | INFO    | Task run 'Carga a S3-91e' - Cargado a s3://esteban-datalake-hcn-2026/consumption_zone/category_kpis.parquet
+19:05:42.150 | INFO    | Task run 'Carga a S3-91e' - Finished in state Completed()
+19:05:42.486 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - 
+--- Verificacion de zonas del Data Lake ---
+19:05:42.487 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - Zona / Clave                                                 Bytes   % vs CSV
+19:05:42.488 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - -----------------------------------------------------------------------------
+19:05:42.488 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - consumption_zone/category_kpis.parquet                        5291      27.8%
+19:05:42.489 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - optimized_zone/restaurants_processed.parquet                 11245      59.2%
+19:05:42.490 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - raw_zone/restaurants_raw.csv                                 19010     100.0%
+19:05:42.490 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - -----------------------------------------------------------------------------
+19:05:42.491 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - Objetos verificados en el Data Lake: 3
+19:05:42.494 | INFO    | Task run 'Verificacion FinOps de zonas S3-112' - Finished in state Completed()
+19:05:42.494 | INFO    | Flow run 'inquisitive-leech' - Pipeline completado correctamente.
+19:05:42.661 | INFO    | Flow run 'inquisitive-leech' - Finished in state Completed()
+19:05:42.682 | INFO    | prefect - Stopping temporary server on http://127.0.0.1:8627

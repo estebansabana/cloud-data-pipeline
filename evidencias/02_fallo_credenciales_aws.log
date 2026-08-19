@@ -1,0 +1,56 @@
+19:04:03.874 | INFO    | prefect - Starting temporary server on http://127.0.0.1:8052
+See https://docs.prefect.io/v3/concepts/server#how-to-guides for more information on running a dedicated Prefect server.
+19:04:05.448 | INFO    | Flow run 'glossy-raccoon' - Beginning flow run 'glossy-raccoon' for flow 'Pipeline Medallion HCN'
+19:04:05.964 | INFO    | Task run 'Extraccion Foursquare-40b' - Extraccion completada: 50 registros obtenidos.
+19:04:05.968 | INFO    | Task run 'Extraccion Foursquare-40b' - Finished in state Completed()
+19:04:05.976 | INFO    | Task run 'Persistencia CSV local-dc9' - CSV local generado: output/restaurants_raw.csv (19010 bytes)
+19:04:05.978 | INFO    | Task run 'Persistencia CSV local-dc9' - Finished in state Completed()
+19:04:06.367 | ERROR   | Task run 'Carga a S3-4ef' - Fallo de credenciales o permisos en S3: Failed to upload output/restaurants_raw.csv to esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.
+19:04:06.371 | INFO    | Task run 'Carga a S3-4ef' - Task run failed with exception: S3UploadFailedError('Failed to upload output/restaurants_raw.csv to esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.') - Retry 1/1 will start 3 second(s) from now
+19:04:09.680 | ERROR   | Task run 'Carga a S3-4ef' - Fallo de credenciales o permisos en S3: Failed to upload output/restaurants_raw.csv to esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.
+19:04:09.681 | ERROR   | Task run 'Carga a S3-4ef' - Task run failed with exception: S3UploadFailedError('Failed to upload output/restaurants_raw.csv to esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.') - Retries are exhausted
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/boto3/s3/transfer.py", line 452, in upload_file
+    future.result()
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/s3transfer/futures.py", line 111, in result
+    return self._coordinator.result()
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/s3transfer/futures.py", line 287, in result
+    raise self._exception
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/s3transfer/tasks.py", line 142, in __call__
+    return self._execute_main(kwargs)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/s3transfer/tasks.py", line 165, in _execute_main
+    return_value = self._main(**kwargs)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/s3transfer/upload.py", line 796, in _main
+    client.put_object(Bucket=bucket, Key=key, Body=body, **extra_args)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/botocore/client.py", line 606, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/botocore/context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/botocore/client.py", line 1094, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.exceptions.ClientError: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1021, in run_context
+    yield self
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1683, in run_task_sync
+    engine.call_task_fn(txn)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1038, in call_task_fn
+    result = call_with_parameters(self.task.fn, parameters)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/utilities/callables/__init__.py", line 348, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/Users/estebanbejaranocaldas/Documents/maestria_analitica/cloud-data-pipeline/pipeline_orchestrator.py", line 148, in upload_to_s3
+    s3.upload_file(local_path, BUCKET, s3_key)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/botocore/context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/boto3/s3/inject.py", line 175, in upload_file
+    return transfer.upload_file(
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/boto3/s3/transfer.py", line 458, in upload_file
+    raise S3UploadFailedError(
+boto3.exceptions.S3UploadFailedError: Failed to upload output/restaurants_raw.csv to esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.
+19:04:09.686 | ERROR   | Task run 'Carga a S3-4ef' - Finished in state Failed('Task run encountered an exception S3UploadFailedError: Failed to upload output/restaurants_raw.csv to esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.')
+19:04:09.687 | ERROR   | Flow run 'glossy-raccoon' - FALLO OPERATIVO: S3UploadFailedError: Failed to upload output/restaurants_raw.csv to esteban-datalake-hcn-2026/raw_zone/restaurants_raw.csv: An error occurred (InvalidToken) when calling the PutObject operation: The provided token is malformed or otherwise invalid.
+19:04:10.469 | INFO    | Flow run 'glossy-raccoon' - Finished in state Completed()
+19:04:10.475 | INFO    | prefect - Stopping temporary server on http://127.0.0.1:8052

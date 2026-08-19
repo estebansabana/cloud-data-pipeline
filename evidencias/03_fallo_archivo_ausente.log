@@ -1,0 +1,21 @@
+19:04:53.375 | INFO    | prefect - Starting temporary server on http://127.0.0.1:8181
+See https://docs.prefect.io/v3/concepts/server#how-to-guides for more information on running a dedicated Prefect server.
+19:04:54.901 | INFO    | Flow run 'famous-chipmunk' - Beginning flow run 'famous-chipmunk' for flow 'Prueba - archivo local ausente'
+19:04:54.909 | INFO    | Task run 'Carga a S3-8bd' - Task run failed with exception: FileNotFoundError('Archivo local no encontrado: output/archivo_que_no_existe.csv') - Retry 1/1 will start 3 second(s) from now
+19:04:57.922 | ERROR   | Task run 'Carga a S3-8bd' - Task run failed with exception: FileNotFoundError('Archivo local no encontrado: output/archivo_que_no_existe.csv') - Retries are exhausted
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1021, in run_context
+    yield self
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1683, in run_task_sync
+    engine.call_task_fn(txn)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/task_engine.py", line 1038, in call_task_fn
+    result = call_with_parameters(self.task.fn, parameters)
+  File "/opt/anaconda3/envs/pipeline_nube/lib/python3.10/site-packages/prefect/utilities/callables/__init__.py", line 348, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/Users/estebanbejaranocaldas/Documents/maestria_analitica/cloud-data-pipeline/pipeline_orchestrator.py", line 144, in upload_to_s3
+    raise FileNotFoundError(f"Archivo local no encontrado: {local_path}")
+FileNotFoundError: Archivo local no encontrado: output/archivo_que_no_existe.csv
+19:04:57.928 | ERROR   | Task run 'Carga a S3-8bd' - Finished in state Failed('Task run encountered an exception FileNotFoundError: Archivo local no encontrado: output/archivo_que_no_existe.csv')
+19:04:57.929 | ERROR   | Flow run 'famous-chipmunk' - FALLO OPERATIVO: FileNotFoundError: Archivo local no encontrado: output/archivo_que_no_existe.csv
+19:04:58.929 | INFO    | Flow run 'famous-chipmunk' - Finished in state Completed()
+19:04:58.944 | INFO    | prefect - Stopping temporary server on http://127.0.0.1:8181
